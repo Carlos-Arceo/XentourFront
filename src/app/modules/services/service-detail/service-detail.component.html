@@ -1,0 +1,97 @@
+
+
+@if (serviceDetailState.status() == "loading")
+{
+  <div class="flex items-center justify-center" style="min-height: calc(100vh - 4rem); overflow: hidden;">
+    <div class="flex items-center space-x-2 text-green-500">
+        <svg class="animate-spin h-10 w-10 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25"></circle>
+            <path d="M4 12a8 8 0 018-8" stroke-width="4" class="opacity-75"></path>
+        </svg>
+        <p class="text-xl">Cargando...</p>
+    </div>
+</div>
+}
+
+@if (serviceDetailState.status()== 'success'){
+  <div class="container mx-auto p-6">
+    <div class="flex flex-col md:flex-row bg-gray-900 border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+      <!-- Imagen principal -->
+      <div class="md:w-1/2 p-6 flex justify-center items-center">
+        <img [src]="serviceDetailState.data()?.imageUrl" class="w-full rounded-md">
+    </div>
+    <!-- Información del servicio -->
+    <div class="md:w-2/3 p-6 flex flex-col justify-between">
+      <!-- Encabezado -->
+      <div>
+        <h1 class="mb-2 text-2xl font-bold tracking-tight text-green-500 dark:text-white line-clamp-2">{{ serviceDetailState.data()?.serviceName }}</h1>
+        <p class="text-sm text-gray-400 mb-3">
+          <strong>Tipo de Servicio:</strong> {{ serviceDetailState.data()?.serviceType }}
+        </p>
+        <p class="mb-3 font-normal text-white dark:text-gray-400">{{ serviceDetailState.data()?.description }}</p>
+      </div>
+
+      <!-- Detalles adicionales -->
+      <div class="space-y-2">
+        <p class="text-lg text-white"><strong>Precio Base:</strong> {{ serviceDetailState.data()?.basePrice | currency }}</p>
+        <p class="text-lg text-white"><strong>Duración:</strong> {{ serviceDetailState.data()?.durationHours }} horas</p>
+        <p class="text-lg text-white"><strong>Capacidad:</strong> De {{ serviceDetailState.data()?.minCapacity }} a {{ serviceDetailState.data()?.maxCapacity }} personas</p>
+        <p class="text-lg text-white"><strong>Notas:</strong> {{ serviceDetailState.data()?.notes }}</p>
+      </div>
+    </div>
+  </div>
+    <!-- Transporte -->
+     <div class="bg-gray-900 border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6 mt-6">
+      <h2 class="mb-2 text-2xl font-bold tracking-tight text-green-500 dark:text-white line-clamp-2">Transporte</h2>
+      <div class="flex flex-col md:flex-row">
+        <div class="md:w-1/4 pr-6 flex justify-center items-center">
+          <img [src]="serviceDetailState.data()?.transport?.imageUrl" class="w-full rounded-md">
+        </div>
+        <div>
+          <p class="text-lg text-white"><strong>Tipo:</strong> {{ serviceDetailState.data()?.transport?.transportType }}</p>
+          <p class="text-lg text-white"><strong>Vehículo:</strong> {{ serviceDetailState.data()?.transport?.vehicle }}</p>
+          <p class="text-lg text-white"><strong>Seguro de Viaje:</strong> {{ serviceDetailState.data()?.transport?.travelInsurance ? 'Sí' : 'No' }}</p>
+          <p class="text-lg text-white"><strong>Aire Acondicionado:</strong> {{ serviceDetailState.data()?.transport?.hasAirConditioning ? 'Sí' : 'No' }}</p>
+          <p class="text-lg text-white"><strong>Notas:</strong> {{ serviceDetailState.data()?.transport?.notes }}</p>
+        </div>
+      </div>
+     </div>
+
+
+    <!-- Destinos -->
+    <div class="bg-gray-900 border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6 mt-6">
+      <h2 class="mb-2 text-2xl font-bold tracking-tight text-green-500 dark:text-white line-clamp-2">Destinos</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          *ngFor="let destination of serviceDetailState.data()?.destinations"
+          class="bg-slate-800 border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-4">
+          <div class="p-6 flex justify-center items-center">
+            <img [src]="destination.imageUrl" class="w-full rounded-md">
+          </div>
+          <div class="pl-6">
+            <h3 class="mb-2 text-2xl font-bold tracking-tight text-white dark:text-white line-clamp-2">{{ destination.destinationName }}</h3>
+          <p class="text-lg text-white"><strong>Costo de Entrada:</strong> {{ destination.entryCost | currency }}</p>
+          <p class="text-lg text-white"><strong>Incluye Entrada:</strong> {{ destination.includesEntry ? 'Sí' : 'No' }}</p>
+          <p class="text-lg text-white"><strong>Orden de Visita:</strong> {{ destination.visitOrder }}</p>
+          <p class="text-lg text-white"><strong>Notas:</strong> {{ destination.notes }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Artículos -->
+    <div class="bg-gray-900 border border-gray-900 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6 mt-6">
+      <h2 class="mb-2 text-2xl font-bold tracking-tight text-green-500 dark:text-white line-clamp-2">Incluye</h2>
+      <ul class="list-disc list-inside text-white-600">
+        <li *ngFor="let item of serviceDetailState.data()?.items">{{ item.name }}</li>
+      </ul>
+    </div>
+  </div>
+}
+@if (serviceDetailState.status() == 'error') {
+  <div class="bg-red-500 text-white p-4 rounded-md mx-4">
+    Ocurrió un error al obtener los datos. Por favor, inténtalo de nuevo más tarde.
+</div>
+}
+
+
